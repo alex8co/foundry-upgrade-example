@@ -6,11 +6,11 @@ import {BoxV2} from "../src/BoxV2.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 
 contract UpgradeScript is Script {
-    // Fill these in from the output of the Deploy script
-    address public PROXY_ADMIN_ADDRESS = 0x5FbDB2315678afecb367f032d93F642f64180aa3;
-    address public PROXY_ADDRESS = 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512;
+        address public proxyAddress;
+    address public proxyAdminAddress;
 
     function run() external {
+        (proxyAddress, proxyAdminAddress) = new Deploy().run();
         vm.startBroadcast();
 
         // 1. Deploy the new implementation contract (BoxV2)

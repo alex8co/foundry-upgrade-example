@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Foundry build artifacts
+cache/
+out/
+broadcast/
+coverage/
+docs/
+
+# Logs
+*.log
+
+# Dotenv file
+.env
+
+# OS-specific
+.DS_Store
+
+# Editor-specific
+.vscode/
+
+# ai
+prompt_ethereum_smart_contract.txt
+my_gemini.sh
