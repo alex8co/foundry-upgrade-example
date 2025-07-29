@@ -219,8 +219,10 @@ anvil
 
 **2. Deploy V1:**
 ```bash
+export ProxyAddress=0x34A1D3fff3958843C43aD80F30b94c510645C316
+export ProxyAdmin=0x5b73C5498c1E3b4dbA84de0F1833c4a029d90519
 # Note down the ProxyAdmin and Proxy addresses from the output!
-forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --broadcast
+ forge script script/Upgrade.s.sol --sig   "run(address,address)"   $ProxyAddress  $ProxyAdmin     --rpc-url http://127.0.0.1:8545 --broadcast  --private-key $PRIVATE_KEY
 ```
 You'll get an output like this:
 ```

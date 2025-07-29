@@ -2,9 +2,12 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-contract BoxV1 is Initializable {
+contract BoxV1 is Initializable, OwnableUpgradeable {
     uint256 public value;
+
+    event ValueStored(uint256 newValue);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -15,12 +18,14 @@ contract BoxV1 is Initializable {
 
     // This is our replacement for the constructor.
     // The `initializer` modifier ensures it can only be called once.
-    function initialize(uint256 _initialValue) public initializer {
+    function initialize(uint256 _initialValue, address _owner) public initializer {
+        __Ownable_init(_owner);
         value = _initialValue;
     }
 
-    function store(uint256 _newValue) public {
+    function store(uint256 _newValue) public onlyOwner {
         value = _newValue;
+        emit ValueStored(_newValue);
     }
 
     function retrieve() public view returns (uint256) {
