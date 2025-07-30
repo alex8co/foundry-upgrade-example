@@ -7,15 +7,21 @@ import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transpa
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 
 contract DeployV1Script is Script {
-    function run(address _owner, uint256 _initialValue)
+    function run(uint256 _initialValue)
         external
         returns (address proxyAddress, address proxyAdminAddress)
     {
-        vm.startBroadcast();
+        // Use the msg.sender from the `--private-key` as the owner
+        address owner = msg.sender;
+
+        // The vm.startBroadcast() cheatcode makes all subsequent calls come
+        // from the `owner` address.
+        vm.startBroadcast(owner);
 
         // 1. Deploy the ProxyAdmin: This contract will be the owner of the proxy.
-        ProxyAdmin proxyAdmin = new ProxyAdmin(_owner);
-        console.log("ProxyAdmin deployed at:", address(proxyAdmin));
+        ProxyAdmin proxyAdmin = new ProxyAdmin(owner);
+        proxyAdminAddress = address(proxyAdmin);
+        console.log("ProxyAdmin deployed at:", proxyAdminAddress);
 
         // 2. Deploy the implementation contract (BoxV1)
         BoxV1 implementationV1 = new BoxV1();
@@ -24,19 +30,18 @@ contract DeployV1Script is Script {
         // 3. Prepare the initialization call.
         // We need to tell the proxy to call `initialize(42)` on BoxV1.
         // This is done by encoding the function selector and its arguments.
-        bytes memory data = abi.encodeWithSelector(BoxV1.initialize.selector, _initialValue, _owner);
+        bytes memory data = abi.encodeWithSelector(BoxV1.initialize.selector, _initialValue, owner);
 
         // 4. Deploy the TransparentUpgradeableProxy.
         // It takes the implementation address, the admin address, and the initialization data.
         TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(
             address(implementationV1),
-            address(proxyAdmin),
+            proxyAdminAddress,
             data
         );
-        console.log("Proxy for BoxV1 deployed at:", address(proxy));
+        proxyAddress = address(proxy);
+        console.log("Proxy for BoxV1 deployed at:", proxyAddress);
 
         vm.stopBroadcast();
-        proxyAddress = address(proxy);
-        proxyAdminAddress = address(proxyAdmin);
     }
 }

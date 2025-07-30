@@ -16,7 +16,7 @@ cast balance $OWNER_ADDRESS --ether --rpc-url $RPC_URL
 
 ## Run the deploy script
 ```bash
-forge script script/DeployV1.s.sol:DeployV1Script --sig "run(address,uint256)" $OWNER_ADDRESS $INITIAL_VALUE --rpc-url $RPC_URL --private-key $PRIVATE_KEY
+forge script script/DeployV1.s.sol:DeployV1Script --sig "run(uint256)" $INITIAL_VALUE --rpc-url $RPC_URL --private-key $PRIVATE_KEY
 cast balance $OWNER_ADDRESS --ether --rpc-url $RPC_URL
 ```
 
