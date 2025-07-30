@@ -214,8 +214,9 @@ Let's see it in action. We'll use a local Anvil node.
 
 **1. Start Anvil in a separate terminal:**
 ```bash
-anvil
+anvil --fork-url https://reth-ethereum.ithaca.xyz/rpc
 ```
+
 
 **2. Deploy V1:**
 ```bash

@@ -6,7 +6,7 @@ import {BoxV1} from "../src/BoxV1.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 
-contract DeployScript is Script {
+contract DeployV1Script is Script {
     function run(address _owner, uint256 _initialValue)
         external
         returns (address proxyAddress, address proxyAdminAddress)
