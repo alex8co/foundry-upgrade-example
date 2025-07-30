@@ -7,15 +7,14 @@ import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transpa
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 
 contract DeployScript is Script {
-    function run() external returns (address proxyAddress) {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-        address owner = vm.addr(deployerPrivateKey);
-        uint256 initialValue = vm.envUint("INITIAL_VALUE");
-
+    function run(address _owner, uint256 _initialValue)
+        external
+        returns (address proxyAddress, address proxyAdminAddress)
+    {
         vm.startBroadcast();
 
         // 1. Deploy the ProxyAdmin: This contract will be the owner of the proxy.
-        ProxyAdmin proxyAdmin = new ProxyAdmin(owner);
+        ProxyAdmin proxyAdmin = new ProxyAdmin(_owner);
         console.log("ProxyAdmin deployed at:", address(proxyAdmin));
 
         // 2. Deploy the implementation contract (BoxV1)
@@ -25,7 +24,7 @@ contract DeployScript is Script {
         // 3. Prepare the initialization call.
         // We need to tell the proxy to call `initialize(42)` on BoxV1.
         // This is done by encoding the function selector and its arguments.
-        bytes memory data = abi.encodeWithSelector(BoxV1.initialize.selector, initialValue, owner);
+        bytes memory data = abi.encodeWithSelector(BoxV1.initialize.selector, _initialValue, _owner);
 
         // 4. Deploy the TransparentUpgradeableProxy.
         // It takes the implementation address, the admin address, and the initialization data.
@@ -37,6 +36,7 @@ contract DeployScript is Script {
         console.log("Proxy for BoxV1 deployed at:", address(proxy));
 
         vm.stopBroadcast();
-        return address(proxy);
+        proxyAddress = address(proxy);
+        proxyAdminAddress = address(proxyAdmin);
     }
 }
