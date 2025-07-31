@@ -28,9 +28,11 @@ contract UpgradeToV3Script is Script {
         address owner = vm.addr(deployerPrivateKey);
         console.log("owner:", owner);
 
+        //vm.startBroadcast();
         // 1. Deploy the new implementation contract (BoxV3)
         BoxV3 implementationV3 = new BoxV3();
         console.log("Implementation V3 (BoxV3) deployed at:", address(implementationV3));
+        //vm.startBroadcast();
 
         // 2. Get an instance of the ProxyAdmin.
         ProxyAdmin proxyAdmin = ProxyAdmin(proxyAdminAddress);

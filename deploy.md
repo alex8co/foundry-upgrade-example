@@ -16,19 +16,18 @@ cast balance $OWNER_ADDRESS --ether --rpc-url $RPC_URL
 
 ## Run the deploy script
 ```bash
-forge script script/DeployV1.s.sol:DeployV1Script --sig "run(uint256)" $INITIAL_VALUE --rpc-url $RPC_URL 
---private-key $PRIVATE_KEY  --broadcast
+forge script script/DeployV1.s.sol:DeployV1Script --sig "run(uint256)" $INITIAL_VALUE --rpc-url $RPC_URL --private-key $PRIVATE_KEY  --broadcast
 cast balance $OWNER_ADDRESS --ether --rpc-url $RPC_URL 
 ```
 
 ```bash
-export PROXY_ADDRESS=0x733697D06E9AbC1C45d1a1c75D18910d43133a6F
-export PROXY_ADMIN_ADDRESS=0xAD44f37213E7b7f08Ac9A984993429Dac957Ec62
-export BOXV1_ADDRESS=0xEeED66583c579F3eEDF7270AE204419fE3fF09f5
+export PROXY_ADDRESS=0xe3765f851977Ed7B377D0234e9275845fc960775
+export PROXY_ADMIN_ADDRESS=0xFb0a39aE8c44a0E83a1445d4d272294345fA2207
+export BOXV1_ADDRESS=0x4300536b909FbA47e042fCa31B97c09F64643110
 ```
 ```bash
 cast call $PROXY_ADDRESS "retrieve()" --rpc-url $RPC_URL 
-cast send $PROXY_ADDRESS "store(uint256)"  0x101  --rpc-url $RPC_URL --private-key $PRIVATE_KEY
+cast send $PROXY_ADDRESS "store(uint256)"  0x112  --rpc-url $RPC_URL --private-key $PRIVATE_KEY
 cast call $PROXY_ADDRESS "retrieve()" --rpc-url $RPC_URL 
 ```
 

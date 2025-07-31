@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+//import "forge-std/Script.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
@@ -19,6 +20,7 @@ contract BoxV1 is Initializable, OwnableUpgradeable {
     // This is our replacement for the constructor.
     // The `initializer` modifier ensures it can only be called once.
     function initialize(uint256 _initialValue, address _owner) public initializer {
+        //console.log("owner:", _owner);
         __Ownable_init(_owner);
         value = _initialValue;
     }

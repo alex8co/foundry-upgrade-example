@@ -13,7 +13,6 @@ contract UpgradeToV2Script is Script {
         console.log("proxyAddress:", proxyAddress);
         console.log("proxyAdminAddress:", proxyAdminAddress);
         console.log("newName:", newName);
-        //vm.startBroadcast();
         // Use the msg.sender from the `--private-key` as the owner
         //address owner = msg.sender;        
 
@@ -25,14 +24,17 @@ contract UpgradeToV2Script is Script {
         address owner = vm.addr(deployerPrivateKey);
         console.log("owner:", owner);
 
-        // 1. Get an instance of the ProxyAdmin contract
-        //ProxyAdmin proxyAdmin = ProxyAdmin(proxyAdminAddress);
-        ProxyAdmin proxyAdmin = ProxyAdmin(owner);
-
-        // 2. Deploy the new implementation contract (BoxV2)
+        //vm.broadcast();
+        //vm.startBroadcast();
+        // 1. Deploy the new implementation contract (BoxV2)
         // This deployment doesn't need to be broadcasted from the owner's EOA
         BoxV2 implementationV2 = new BoxV2();
         console.log("Implementation V2 (BoxV2) deployed at:", address(implementationV2));
+        //vm.stopBroadcast();
+
+        // 2. Get an instance of the ProxyAdmin contract
+        ProxyAdmin proxyAdmin = ProxyAdmin(proxyAdminAddress);
+        //ProxyAdmin proxyAdmin = ProxyAdmin(owner);
 
         // 3. Prepare the initialization call for the new version.
         bytes memory data = abi.encodeWithSelector(implementationV2.initializeV2.selector, newName);
