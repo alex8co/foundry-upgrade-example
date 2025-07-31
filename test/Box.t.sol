@@ -115,17 +115,8 @@ contract BoxTest is Test {
 
     /// @notice Tests the upgrade process from V2 to V3 and verifies state.
     function test_UpgradeToV3_And_CheckState() public {
-        // --- Setup: Upgrade to V2 first ---
-        BoxV2 implementationV2 = new BoxV2();
-        bytes memory dataV2 = abi.encodeWithSelector(BoxV2.initializeV2.selector, V2_NAME);
-        proxyAdmin.upgradeAndCall(ITransparentUpgradeableProxy(proxyAddress), address(implementationV2), dataV2);
-        // --- End V2 Upgrade ---
-
         // --- Action: Upgrade to V3 ---
-        BoxV3 implementationV3 = new BoxV3();
-        bytes memory dataV3 = abi.encodeWithSelector(BoxV3.initializeV3.selector, V3_DESCRIPTION);
-        proxyAdmin.upgradeAndCall(ITransparentUpgradeableProxy(proxyAddress), address(implementationV3), dataV3);
-        // --- End V3 Upgrade ---
+        _upgradeToV3();
 
         // Create a contract instance at the proxy address to interact with V3 functions.
         boxV3 = BoxV3(proxyAddress);
@@ -142,7 +133,7 @@ contract BoxTest is Test {
     /// @notice Tests the new functionality in V3 and ensures old functionality still works.
     function test_V3_Functionality() public {
         // --- Setup: Upgrade to V3 (via V2) ---
-        test_UpgradeToV3_And_CheckState();
+        _upgradeToV3();
         boxV3 = BoxV3(proxyAddress);
         // --- End Setup ---
 
@@ -160,5 +151,20 @@ contract BoxTest is Test {
         uint256 newValue = 999;
         boxV3.store(newValue);
         assertEq(boxV3.retrieve(), newValue, "V1 store should still work in V3");
+    }
+
+    // --- Internal Helper Functions ---
+
+    /// @notice Helper function to perform the full upgrade path from V1 to V3.
+    function _upgradeToV3() internal {
+        // First, upgrade from V1 to V2
+        BoxV2 implementationV2 = new BoxV2();
+        bytes memory dataV2 = abi.encodeWithSelector(BoxV2.initializeV2.selector, V2_NAME);
+        proxyAdmin.upgradeAndCall(ITransparentUpgradeableProxy(proxyAddress), address(implementationV2), dataV2);
+
+        // Then, upgrade from V2 to V3
+        BoxV3 implementationV3 = new BoxV3();
+        bytes memory dataV3 = abi.encodeWithSelector(BoxV3.initializeV3.selector, V3_DESCRIPTION);
+        proxyAdmin.upgradeAndCall(ITransparentUpgradeableProxy(proxyAddress), address(implementationV3), dataV3);
     }
 }
