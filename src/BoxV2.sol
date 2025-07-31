@@ -20,6 +20,13 @@ contract BoxV2 is Initializable, OwnableUpgradeable {
         _disableInitializers();
     }
 
+    // This is our replacement for the constructor.
+    // The `initializer` modifier ensures it can only be called once.
+    function initialize(uint256 _initialValue, address _owner) public initializer {
+        __Ownable_init(_owner);
+        value = _initialValue;
+    }
+
     // This is a new initializer for V2. It can be called during the upgrade
     // using `upgradeAndCall` to set the values for new state variables.
     // The `reinitializer(2)` modifier ensures this can only be called once for version 2.

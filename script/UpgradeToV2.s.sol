@@ -9,9 +9,25 @@ import {ITransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transp
 
 contract UpgradeToV2Script is Script {
     function run(address proxyAddress, address proxyAdminAddress, string memory newName) external {
+        console.log("msg.sender:", msg.sender);
+        console.log("proxyAddress:", proxyAddress);
+        console.log("proxyAdminAddress:", proxyAdminAddress);
+        console.log("newName:", newName);
         //vm.startBroadcast();
+        // Use the msg.sender from the `--private-key` as the owner
+        //address owner = msg.sender;        
+
+        // It's best practice to load your private key and other secrets
+        // from environment variables rather than hardcoding them in the script.
+        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");        
+        // If you want to set a different owner from the deployer, you can use:
+        // address owner = vm.envAddress("OWNER_ADDRESS");
+        address owner = vm.addr(deployerPrivateKey);
+        console.log("owner:", owner);
+
         // 1. Get an instance of the ProxyAdmin contract
-        ProxyAdmin proxyAdmin = ProxyAdmin(proxyAdminAddress);
+        //ProxyAdmin proxyAdmin = ProxyAdmin(proxyAdminAddress);
+        ProxyAdmin proxyAdmin = ProxyAdmin(owner);
 
         // 2. Deploy the new implementation contract (BoxV2)
         // This deployment doesn't need to be broadcasted from the owner's EOA

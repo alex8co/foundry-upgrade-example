@@ -16,22 +16,50 @@ cast balance $OWNER_ADDRESS --ether --rpc-url $RPC_URL
 
 ## Run the deploy script
 ```bash
-forge script script/DeployV1.s.sol:DeployV1Script --sig "run(uint256)" $INITIAL_VALUE --rpc-url $RPC_URL --private-key $PRIVATE_KEY
-cast balance $OWNER_ADDRESS --ether --rpc-url $RPC_URL
+forge script script/DeployV1.s.sol:DeployV1Script --sig "run(uint256)" $INITIAL_VALUE --rpc-url $RPC_URL 
+--private-key $PRIVATE_KEY  --broadcast
+cast balance $OWNER_ADDRESS --ether --rpc-url $RPC_URL 
+```
+
+```bash
+export PROXY_ADDRESS=0xC6c0E14c02C2dBd4f116230f01D03836620167B9
+export PROXY_ADMIN_ADDRESS=0xdb88CFC18875e3eD6797de31dfAae31F942231F2
+export BOXV1_ADDRESS=0xD0725945859175dabd070855bC3F1c37a3aF605F
+```
+```bash
+cast call $PROXY_ADDRESS "retrieve()" --rpc-url $RPC_URL 
+cast send $PROXY_ADDRESS "store(uint256)"  0x101  --rpc-url $RPC_URL --private-key $PRIVATE_KEY
+cast call $PROXY_ADDRESS "retrieve()" --rpc-url $RPC_URL 
 ```
 
 # upgrade to V2
 ## Set your environment variables
-```bash
-export PROXY_ADDRESS=0xEAD683c29178d41A511311c1Eb0fce8aD618c3CF
-export PROXY_ADMIN_ADDRESS=0xaA19aff541ed6eBF528f919592576baB138370DC
-export BOXV1_ADDRESS=0xEAD683c29178d41A511311c1Eb0fce8aD618c3CF
-```
 
 ## Run the upgrade script
 ```bash
-forge script script/UpgradeToV2.s.sol --sig "run(address,address,string)" $PROXY_ADDRESS $PROXY_ADMIN_ADDRESS "BoxV2_add_name" --rpc-url $RPC_URL   --private-key $PRIVATE_KEY
+forge script script/UpgradeToV2.s.sol --sig "run(address,address,string)" $PROXY_ADDRESS $PROXY_ADMIN_ADDRESS "BoxV2_add_name" --rpc-url $RPC_URL
+--private-key $PRIVATE_KEY  --broadcast
 ```
+```bash
+export BOXV2_ADDRESS=0xC7f2Cf4845C6db0e1a1e91ED41Bcd0FcC1b0E141
+```
+
+```bash
+cast send $PROXY_ADDRESS "setName(string)" "BoxV2"   --rpc-url $RPC_URL   --private-key $PRIVATE_KEY
+```
+
+
+# upgrade to V3
+
+## Set your environment variables
+
+## Run the upgrade script
+```bash
+forge script script/UpgradeToV3.s.sol --sig "run(address,address,string)" $PROXY_ADDRESS $PROXY_ADMIN_ADDRESS "BoxV3_add_description" --rpc-url $RPC_URL
+--private-key $PRIVATE_KEY  --broadcast
+```
+
+# other
 
 ```bash
 cast balance $OWNER_ADDRESS --ether --rpc-url $RPC_URL
@@ -40,17 +68,3 @@ cast wallet address $PRIVATE_KEY
 cast balance $PROXY_ADMIN_ADDRESS --ether --rpc-url $RPC_URL
 ```
 
-
-# upgrade to V3
-
-## Set your environment variables
-```bash
-export PROXY_ADDRESS=<your_proxy_address>
-export PROXY_ADMIN_ADDRESS=<your_proxy_admin_address>
-export RPC_URL=<your_rpc_url>
-```
-
-## Run the upgrade script
-```bash
-forge script script/UpgradeToV3.s.sol --sig "run(address,address,string)" $PROXY_ADDRESS $PROXY_ADMIN_ADDRESS "BoxV3_add_description" --rpc-url $RPC_URL   --private-key $PRIVATE_KEY
-```

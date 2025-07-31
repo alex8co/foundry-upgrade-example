@@ -11,17 +11,33 @@ contract UpgradeToV3Script is Script {
     function run(
         address proxyAddress,
         address proxyAdminAddress,
-        string memory newDescription
+        string memory description
     ) external {
+        console.log("msg.sender:", msg.sender);
+        console.log("proxyAddress:", proxyAddress);
+        console.log("proxyAdminAddress:", proxyAdminAddress);
+        console.log("description:", description);
+        // Use the msg.sender from the `--private-key` as the owner
+        //address owner = msg.sender;
+
+        // It's best practice to load your private key and other secrets
+        // from environment variables rather than hardcoding them in the script.
+        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");        
+        // If you want to set a different owner from the deployer, you can use:
+        // address owner = vm.envAddress("OWNER_ADDRESS");
+        address owner = vm.addr(deployerPrivateKey);
+        console.log("owner:", owner);
+
         // 1. Deploy the new implementation contract (BoxV3)
         BoxV3 implementationV3 = new BoxV3();
         console.log("Implementation V3 (BoxV3) deployed at:", address(implementationV3));
 
         // 2. Get an instance of the ProxyAdmin.
         ProxyAdmin proxyAdmin = ProxyAdmin(proxyAdminAddress);
+        //ProxyAdmin proxyAdmin = ProxyAdmin(owner);
 
         // 3. Prepare the initialization call for the new version.
-        bytes memory data = abi.encodeWithSelector(implementationV3.initializeV3.selector, newDescription);
+        bytes memory data = abi.encodeWithSelector(implementationV3.initializeV3.selector, description);
 
         // 4. Use vm.broadcast() to make the *next* call come directly from the EOA
         // specified by --private-key. This ensures the `onlyOwner` check on ProxyAdmin passes.
