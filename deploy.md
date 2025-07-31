@@ -22,9 +22,9 @@ cast balance $OWNER_ADDRESS --ether --rpc-url $RPC_URL
 ```
 
 ```bash
-export PROXY_ADDRESS=0xC6c0E14c02C2dBd4f116230f01D03836620167B9
-export PROXY_ADMIN_ADDRESS=0xdb88CFC18875e3eD6797de31dfAae31F942231F2
-export BOXV1_ADDRESS=0xD0725945859175dabd070855bC3F1c37a3aF605F
+export PROXY_ADDRESS=0x733697D06E9AbC1C45d1a1c75D18910d43133a6F
+export PROXY_ADMIN_ADDRESS=0xAD44f37213E7b7f08Ac9A984993429Dac957Ec62
+export BOXV1_ADDRESS=0xEeED66583c579F3eEDF7270AE204419fE3fF09f5
 ```
 ```bash
 cast call $PROXY_ADDRESS "retrieve()" --rpc-url $RPC_URL 
@@ -46,8 +46,9 @@ export BOXV2_ADDRESS=0xC7f2Cf4845C6db0e1a1e91ED41Bcd0FcC1b0E141
 
 ```bash
 cast send $PROXY_ADDRESS "setName(string)" "BoxV2"   --rpc-url $RPC_URL   --private-key $PRIVATE_KEY
+cast send $BOXV2_ADDRESS "setName(string)" "BoxV2"   --rpc-url $RPC_URL   --private-key $PRIVATE_KEY
+cast call $PROXY_ADDRESS "name()" --rpc-url $RPC_URL
 ```
-
 
 # upgrade to V3
 

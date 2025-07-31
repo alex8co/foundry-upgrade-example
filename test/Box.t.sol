@@ -58,7 +58,7 @@ contract BoxTest is Test {
     }
 
     /// @notice Tests that the initial state of BoxV1 is set correctly after deployment.
-    function test_V1_InitialState() public {
+    function test_V1_InitialState() public view {
         assertEq(boxV1.retrieve(), INITIAL_VALUE, "V1 initial value should be set");
         assertEq(boxV1.owner(), address(this), "V1 owner should be this contract");
     }
