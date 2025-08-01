@@ -21,20 +21,18 @@ cast balance $OWNER_ADDRESS --ether --rpc-url $RPC_URL
 ```
 
 ```bash
-export PROXY_ADDRESS=0xdb88CFC18875e3eD6797de31dfAae31F942231F2
-export PROXY_ADMIN_ADDRESS=0xFEE2d383Ee292283eC43bdf0fa360296BE1e1149
-export BOXV1_ADDRESS=0xf0014CBe67b3aB638bdaA2e2Cb1B531935829E50
+export PROXY_ADDRESS=0xbC319144A76FEe6A16FBf9A3A81c063F9E264B93
+export PROXY_ADMIN_ADDRESS=0xF31c1E4a4339Df9E85f8D3f26Fb4f9C2E095a9EB
 ```
 ```bash
 cast call $PROXY_ADDRESS "retrieve()" --rpc-url $RPC_URL 
-cast send $PROXY_ADDRESS "store(uint256)"  0x112  --rpc-url $RPC_URL --private-key $PRIVATE_KEY
+cast send $PROXY_ADDRESS "store(uint256)"  0x111  --rpc-url $RPC_URL --private-key $PRIVATE_KEY
 cast call $PROXY_ADDRESS "retrieve()" --rpc-url $RPC_URL 
 ```
 
 ```bash
 cast call $PROXY_ADDRESS "owner()(address)" --rpc-url $RPC_URL
 cast call $PROXY_ADMIN_ADDRESS "owner()(address)" --rpc-url $RPC_URL
-cast call $BOXV1_ADDRESS "owner()(address)" --rpc-url $RPC_URL
 ```
 
 
@@ -45,13 +43,9 @@ cast call $BOXV1_ADDRESS "owner()(address)" --rpc-url $RPC_URL
 ```bash
 forge script script/UpgradeToV2.s.sol --sig "run(address,address,string)" $PROXY_ADDRESS $PROXY_ADMIN_ADDRESS "BoxV2_add_name" --rpc-url $RPC_URL --private-key $PRIVATE_KEY  --broadcast
 ```
-```bash
-export BOXV2_ADDRESS=0xC7f2Cf4845C6db0e1a1e91ED41Bcd0FcC1b0E141
-```
 
 ```bash
 cast send $PROXY_ADDRESS "setName(string)" "BoxV2"   --rpc-url $RPC_URL   --private-key $PRIVATE_KEY
-cast send $BOXV2_ADDRESS "setName(string)" "BoxV2"   --rpc-url $RPC_URL   --private-key $PRIVATE_KEY
 cast call $PROXY_ADDRESS "name()" --rpc-url $RPC_URL
 ```
 

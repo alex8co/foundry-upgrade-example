@@ -42,8 +42,6 @@ contract DeployV1Script is Script {
         // This will be executed by the proxy in its constructor via delegatecall.
         bytes memory data = abi.encodeCall(BoxV1.initialize, (_initialValue, owner));
 
-        //bytes memory data; // data is empty
-
         // 4. Deploy the TransparentUpgradeableProxy, passing in the initialization data.
         // This combines deployment and initialization into a single transaction.
         TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(
@@ -51,11 +49,6 @@ contract DeployV1Script is Script {
             proxyAdminAddress,
             data
         );
-
-        // 5. Initialize the proxy in a separate, subsequent call.
-        // This ensures msg.sender in the implementation's context is the 'owner' EOA.
-        //BoxV1(proxyAddress).initialize(_initialValue, owner);
-        //console.log("Proxy initialized correctly. Owner is:", owner);
 
         proxyAddress = address(proxy);
         console.log("Proxy for BoxV1 deployed at:", proxyAddress);
