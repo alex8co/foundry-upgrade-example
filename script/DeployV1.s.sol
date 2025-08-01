@@ -37,28 +37,29 @@ contract DeployV1Script is Script {
         BoxV1 implementationV1 = new BoxV1();
         console.log("implementationV1:", address(implementationV1));
 
-        // 3. Prepare the initialization call.
-        // We need to tell the proxy to call `initialize(42)` on BoxV1.
-        // This is done by encoding the function selector and its arguments.
-        //bytes memory data = abi.encodeWithSelector(BoxV1.initialize.selector, _initialValue, owner);
+        // 3. Prepare the initialization call data.
+        // We use abi.encodeCall which is type-safe and preferred over abi.encodeWithSelector.
+        // This will be executed by the proxy in its constructor via delegatecall.
+        bytes memory data = abi.encodeCall(BoxV1.initialize, (_initialValue, owner));
 
-        // 3. Deploy Proxy with NO initialization data to avoid the msg.sender trap.
-        bytes memory data; // data is empty
-        // 4. Deploy the TransparentUpgradeableProxy.
-        // It takes the implementation address, the admin address, and the initialization data.
+        //bytes memory data; // data is empty
+
+        // 4. Deploy the TransparentUpgradeableProxy, passing in the initialization data.
+        // This combines deployment and initialization into a single transaction.
         TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(
             address(implementationV1),
             proxyAdminAddress,
             data
         );
-        proxyAddress = address(proxy);
-        console.log("proxyAddress:", proxyAddress);
-
 
         // 5. Initialize the proxy in a separate, subsequent call.
         // This ensures msg.sender in the implementation's context is the 'owner' EOA.
-        BoxV1(proxyAddress).initialize(_initialValue, owner);
-        console.log("Proxy initialized correctly. Owner is:", owner);
+        //BoxV1(proxyAddress).initialize(_initialValue, owner);
+        //console.log("Proxy initialized correctly. Owner is:", owner);
+
+        proxyAddress = address(proxy);
+        console.log("Proxy for BoxV1 deployed at:", proxyAddress);
+        console.log("Proxy initialized. Business logic owner is:", BoxV1(proxyAddress).owner());
 
         vm.stopBroadcast();
     }

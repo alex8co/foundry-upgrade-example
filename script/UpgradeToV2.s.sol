@@ -36,8 +36,9 @@ contract UpgradeToV2Script is Script {
         ProxyAdmin proxyAdmin = ProxyAdmin(proxyAdminAddress);
         //ProxyAdmin proxyAdmin = ProxyAdmin(owner);
 
-        // 3. Prepare the initialization call for the new version.
-        bytes memory data = abi.encodeWithSelector(implementationV2.initializeV2.selector, newName);
+        // 3. Prepare the initialization call for the new version using the safer abi.encodeCall.
+        bytes memory data = abi.encodeCall(BoxV2.initializeV2, (newName));
+        //bytes memory data;
 
         // 4. Use vm.broadcast() to make the *next* call come directly from the EOA
         // specified by --private-key. This is crucial for the `onlyOwner` check.
@@ -50,6 +51,12 @@ contract UpgradeToV2Script is Script {
             address(implementationV2),
             data
         );
+
+
+        // 5. Initialize the proxy in a separate, subsequent call.
+        // This ensures msg.sender in the implementation's context is the 'owner' EOA.
+        //BoxV2(proxyAddress).initializeV2(newName);
+
 
         //vm.stopBroadcast();
         console.log("Upgrade complete! Proxy is now pointing to V2.");

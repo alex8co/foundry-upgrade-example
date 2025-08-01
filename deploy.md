@@ -21,9 +21,9 @@ cast balance $OWNER_ADDRESS --ether --rpc-url $RPC_URL
 ```
 
 ```bash
-export PROXY_ADDRESS=0xe3765f851977Ed7B377D0234e9275845fc960775
-export PROXY_ADMIN_ADDRESS=0xFb0a39aE8c44a0E83a1445d4d272294345fA2207
-export BOXV1_ADDRESS=0x4300536b909FbA47e042fCa31B97c09F64643110
+export PROXY_ADDRESS=0xdb88CFC18875e3eD6797de31dfAae31F942231F2
+export PROXY_ADMIN_ADDRESS=0xFEE2d383Ee292283eC43bdf0fa360296BE1e1149
+export BOXV1_ADDRESS=0xf0014CBe67b3aB638bdaA2e2Cb1B531935829E50
 ```
 ```bash
 cast call $PROXY_ADDRESS "retrieve()" --rpc-url $RPC_URL 
@@ -31,13 +31,19 @@ cast send $PROXY_ADDRESS "store(uint256)"  0x112  --rpc-url $RPC_URL --private-k
 cast call $PROXY_ADDRESS "retrieve()" --rpc-url $RPC_URL 
 ```
 
+```bash
+cast call $PROXY_ADDRESS "owner()(address)" --rpc-url $RPC_URL
+cast call $PROXY_ADMIN_ADDRESS "owner()(address)" --rpc-url $RPC_URL
+cast call $BOXV1_ADDRESS "owner()(address)" --rpc-url $RPC_URL
+```
+
+
 # upgrade to V2
 ## Set your environment variables
 
 ## Run the upgrade script
 ```bash
-forge script script/UpgradeToV2.s.sol --sig "run(address,address,string)" $PROXY_ADDRESS $PROXY_ADMIN_ADDRESS "BoxV2_add_name" --rpc-url $RPC_URL
---private-key $PRIVATE_KEY  --broadcast
+forge script script/UpgradeToV2.s.sol --sig "run(address,address,string)" $PROXY_ADDRESS $PROXY_ADMIN_ADDRESS "BoxV2_add_name" --rpc-url $RPC_URL --private-key $PRIVATE_KEY  --broadcast
 ```
 ```bash
 export BOXV2_ADDRESS=0xC7f2Cf4845C6db0e1a1e91ED41Bcd0FcC1b0E141
